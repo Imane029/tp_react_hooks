@@ -23,7 +23,7 @@ Le hook utilise `useEffect` pour déclencher la récupération des données via 
 
 **Captures d'écran montrant le fonctionnement :**
 *(Pour cette étape, tu ne verras pas directement le fonctionnement dans l'interface, car le hook ne fait que récupérer les données. Tu pourrais prendre une capture d'écran de la console du navigateur (touche F12, onglet "Console" et "Network") pour montrer que la requête est partie et a reçu une réponse 200, ou que l'erreur s'affiche si tu déconnectes ton internet par exemple.)*
-
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/7c6930249dfc04f57fcb0aa439ab380fac71042d/screenshots/cap%20proj.PNG)
 
 **Difficultés rencontrées et comment vous les avez résolues :**
 * **Gestion des états de chargement et d'erreur :** Au début, je n'avais que l'état `posts`. J'ai ajouté `isLoading` et `error` pour fournir un retour utilisateur clair. `isLoading` est mis à `true` avant la requête et à `false` dans le bloc `finally`. `error` est mis à jour dans le bloc `catch`.
