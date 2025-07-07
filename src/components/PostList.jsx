@@ -1,34 +1,35 @@
-// src/components/PostList.jsx
 import React from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
-const PostList = ({ posts, isLoading, error }) => {
-  if (isLoading) {
-    return <p style={{ textAlign: 'center', fontSize: '1.2em', color: '#007bff' }}>Chargement des posts en cours...</p>;
+const PostList = ({ posts, loading, error }) => {
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return <p style={{ textAlign: 'center', fontSize: '1.2em', color: 'red', fontWeight: 'bold' }}>Erreur ! Impossible de charger les posts : {error.message}</p>;
+    return <div className="text-red-500 dark:text-red-400 text-center py-4">Erreur: {error}</div>;
   }
 
   if (posts.length === 0) {
-    return <p style={{ textAlign: 'center', fontSize: '1.2em', color: '#6c757d' }}>Aucun post trouvé pour le moment.</p>;
+    return <div className="text-center text-gray-600 dark:text-gray-300 py-4">Aucun post trouvé.</div>;
   }
 
   return (
-    <div className="post-list" style={{ marginTop: '20px' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map(post => (
-        <div key={post.id} className="post-item" style={{
-          border: '1px solid #e0e0e0',
-          borderRadius: '8px',
-          padding: '15px',
-          margin: '15px 0',
-          backgroundColor: '#f9f9f9',
-          boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
-        }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#34495e' }}>{post.title}</h3>
-          <p style={{ margin: '0', color: '#555', fontSize: '0.9em', lineHeight: '1.5' }}>
-            {post.body.length > 180 ? post.body.substring(0, 180) + '...' : post.body}
-          </p>
+        <div key={post.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{post.title}</h3>
+          <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-3">{post.body}</p>
+          <div className="flex flex-wrap gap-2">
+            {post.tags.map(tag => (
+              <span
+                key={tag}
+                className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs font-medium px-2 py-0.5 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       ))}
     </div>

@@ -1,32 +1,22 @@
-// src/components/PostSearch.jsx
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
+// import useDebounce from '../hooks/useDebounce'; // Supprimez cette ligne
 
-const PostSearch = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const PostSearch = ({ searchQuery, setSearchQuery }) => {
+  // Supprimez la ligne suivante car useDebounce sera déplacé dans usePosts
+  // const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    onSearch(value);
-  };
+  const handleChange = useCallback((e) => {
+    setSearchQuery(e.target.value); // Met à jour l'état de recherche immédiatement
+  }, [setSearchQuery]);
 
   return (
-    <div className="post-search" style={{ marginBottom: '25px', textAlign: 'center' }}>
+    <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
       <input
         type="text"
         placeholder="Rechercher par titre ou contenu..."
-        value={searchTerm}
+        value={searchQuery}
         onChange={handleChange}
-        style={{
-          padding: '12px 20px',
-          width: '85%',
-          maxWidth: '500px',
-          borderRadius: '30px',
-          border: '1px solid #ccc',
-          fontSize: '1.1em',
-          boxShadow: 'inset 0 1px 4px rgba(0,0,0,0.08)',
-          outline: 'none'
-        }}
+        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100"
       />
     </div>
   );

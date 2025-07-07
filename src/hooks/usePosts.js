@@ -1,38 +1,46 @@
-// src/hooks/usePosts.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
+// Hook personnalisé pour gérer la récupération et la recherche des posts
 const usePosts = () => {
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  // Fonction pour charger les posts depuis l'API
+  const fetchPosts = useCallback(async (query = '') => {
+    setLoading(true);
+    setError(null);
+    try {
+      const url = query
+        ? `https://dummyjson.com/posts/search?q=${query}`
+        : 'https://dummyjson.com/posts';
 
-        const response = await fetch('https://dummyjson.com/posts');
-
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP! Statut: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setPosts(data.posts);
-
-      } catch (e) {
-        setError(e);
-        console.error("Erreur lors de la récupération des posts:", e);
-      } finally {
-        setIsLoading(false);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
       }
-    };
-
-    fetchPosts();
+      const data = await response.json();
+      setPosts(data.posts);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { posts, isLoading, error };
+  // Effet pour déclencher la recherche lorsque searchQuery change
+  useEffect(() => {
+    fetchPosts(searchQuery);
+  }, [searchQuery, fetchPosts]);
+
+  return {
+    posts,
+    loading,
+    error,
+    searchQuery,
+    setSearchQuery,
+  };
 };
 
 export default usePosts;
