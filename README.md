@@ -1,76 +1,187 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# TP React Hooks - Application de Blog
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ce TP a pour objectif de mettre en pratique l'utilisation des Hooks React (`useState`, `useEffect`, `useCallback`, `useMemo`) ainsi que la création de hooks personnalisés à travers une application de blog simple.
 
 ---
 
-## Exercice 1 : État et Effets
+## 🚀 Installation et configuration initiale
+
+```bash
+git clone https://github.com/pr-daaif/tp-react-hooks-blog.git
+cd tp-react-hooks-blog
+git remote remove origin
+git remote add origin https://github.com/imane029/tp-react-hooks-blog.git
+git push -u origin main
+npm install
+npm start
+```
+
+---
+
+## ✅ Exercice 1 : État et Effets
+
+### 🎯 Objectif : Implémenter l'affichage et la recherche de posts
+
+---
 
 ### 1.1 Compléter le hook `usePosts` pour récupérer les posts depuis l'API dummyjson.com
 
-**Explication de la solution :**
-J'ai créé un hook personnalisé `usePosts` dans `src/hooks/usePosts.js`. Ce hook utilise `useState` pour gérer trois états : `posts` (la liste des articles), `isLoading` (pour savoir si les données sont en cours de chargement) et `error` (pour capturer les éventuelles erreurs).
-Le hook utilise `useEffect` pour déclencher la récupération des données via `fetch` depuis l'API `https://dummyjson.com/posts` une seule fois au montage du composant. Un bloc `try-catch-finally` assure la gestion des succès, des erreurs réseau/parsing et la mise à jour correcte de l'état `isLoading`.
+**🧐 Explication de la solution :**
 
-**Captures d'écran montrant le fonctionnement :**
-*(Pour cette étape, tu ne verras pas directement le fonctionnement dans l'interface, car le hook ne fait que récupérer les données. Tu pourrais prendre une capture d'écran de la console du navigateur (touche F12, onglet "Console" et "Network") pour montrer que la requête est partie et a reçu une réponse 200, ou que l'erreur s'affiche si tu déconnectes ton internet par exemple.)*
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/7c6930249dfc04f57fcb0aa439ab380fac71042d/screenshots/cap%20proj.PNG)
+J’ai créé un hook personnalisé `usePosts` dans `src/hooks/usePosts.js`. Il gère 3 états :  
+- `posts` (liste des articles)  
+- `isLoading` (chargement)  
+- `error` (erreurs éventuelles)
 
-**Difficultés rencontrées et comment vous les avez résolues :**
-* **Gestion des états de chargement et d'erreur :** Au début, je n'avais que l'état `posts`. J'ai ajouté `isLoading` et `error` pour fournir un retour utilisateur clair. `isLoading` est mis à `true` avant la requête et à `false` dans le bloc `finally`. `error` est mis à jour dans le bloc `catch`.
-* **Parsing de la réponse de l'API :** L'API `dummyjson.com/posts` renvoie un objet JSON avec une propriété `posts` qui contient le tableau d'articles. J'ai donc dû accéder à `data.posts` après avoir parsé la réponse (`response.json()`).
+L’appel à `fetch` est lancé dans `useEffect` au montage du composant.  
+J’utilise `try/catch/finally` pour bien gérer la requête et l’état.
+
+**📷 Capture d’écran (chargement initial) :**  
+![Chargement initial](https://github.com/Imane029/tp_react_hooks/blob/7c6930249dfc04f57fcb0aa439ab380fac71042d/screenshots/cap%20proj.PNG)
+
+**❗ Difficultés rencontrées :**
+- Mauvais accès aux données au début (`data` au lieu de `data.posts`)
+- Besoin de feedback utilisateur, donc ajout de `isLoading` et `error`
+
+---
 
 ### 1.2 Implémenter le composant `PostList` pour afficher les posts
 
-**Explication de la solution :**
-Le composant `PostList` (situé dans `src/components/PostList.jsx`) reçoit les props `posts`, `isLoading`, et `error` de son parent (ici, `App.jsx`). Il gère l'affichage conditionnel : un message de chargement si `isLoading` est vrai, un message d'erreur si `error` est présent, un message "Aucun post trouvé" si la liste est vide, et enfin la liste des posts si tout est normal. Chaque post est affiché avec son titre et un extrait de son contenu, en utilisant `post.id` comme clé unique pour chaque élément.
-Le composant `App.jsx` a été modifié pour importer et utiliser le hook `usePosts` et le composant `PostList`, en passant les états récupérés.
+**🧐 Explication de la solution :**
 
-**Captures d'écran montrant le fonctionnement :**
+Le composant `PostList` reçoit `posts`, `isLoading`, et `error` en props.  
+Il affiche :
+- Un message de chargement
+- Un message d'erreur
+- Un message "Aucun post trouvé" si `posts.length === 0`
+- Sinon, la liste des titres + extraits des posts
 
-**1. Affichage initial de la liste des posts (avec le message de chargement si visible, puis la liste complète) :**
-![Liste des posts au chargement initial](screenshots/cap proj.PNG)
+**📷 Capture d’écran :**  
+![Affichage des posts](https://github.com/Imane029/tp_react_hooks/blob/7c6930249dfc04f57fcb0aa439ab380fac71042d/screenshots/cap%20proj.PNG)
 
-**2. (Optionnel) Message d'erreur si la connexion est coupée :**
+**❗ Difficultés rencontrées :**
+- Utilisation de `post.id` comme `key`
+- Troncature du texte avec `substring(0, 150)`
 
-
-**Difficultés rencontrées et comment vous les avez résolues :**
-* **Passer les props correctement :** Il était crucial de s'assurer que les trois états (`posts`, `isLoading`, `error`) du hook `usePosts` soient bien passés en tant que props au composant `PostList` depuis `App.jsx`.
-* **Gestion des clés pour les listes :** J'ai utilisé `key={post.id}` lors du `map` pour que React puisse identifier de manière unique chaque élément de la liste, ce qui est une bonne pratique pour la performance et la stabilité.
-* **Affichage d'extrait de texte :** Pour ne pas afficher des paragraphes trop longs, j'ai utilisé `post.body.substring(0, 150) + '...'` pour tronquer le contenu.
+---
 
 ### 1.3 Ajouter la fonctionnalité de recherche par titre ou contenu dans `PostSearch`
 
-**Explication de la solution :**
-J'ai créé le composant `PostSearch` dans `src/components/PostSearch.jsx`. Ce composant contient un `input` et gère son propre état local (`searchTerm`) pour le texte saisi. Il reçoit une prop `onSearch` (une fonction de rappel) du composant parent. À chaque modification du champ de saisie, `handleChange` met à jour `searchTerm` et appelle `onSearch` avec la nouvelle valeur.
+**🧐 Explication de la solution :**
 
-Dans `App.jsx`, j'ai ajouté un nouvel état `filteredPosts` qui sera la liste réellement affichée. Initialement, `filteredPosts` est mis à jour avec tous les `posts` récupérés par `usePosts` via un `useEffect`. La fonction `handleSearch` est passée à `PostSearch` via la prop `onSearch`. Cette fonction filtre les `posts` originaux en vérifiant si le `title` ou le `body` (convertis en minuscules pour une recherche insensible à la casse) incluent le `searchTerm`. Si le `searchTerm` est vide, `filteredPosts` est réinitialisé à la liste complète des `posts`.
+J'ai créé un composant `PostSearch` avec un champ `input` qui gère son propre `searchTerm`.  
+Il appelle `onSearch(term)` (passé en props) à chaque changement.
 
-**Captures d'écran montrant le fonctionnement :**
+Dans `App.jsx`, `handleSearch` filtre `posts` (sur `title` et `body`) en insensible à la casse (`toLowerCase()` + `includes()`), et met à jour `filteredPosts`.
 
+**📷 Capture d’écran :**  
+![Filtrage](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/cap%20proj1.PNG)
 
-**. La page après avoir tapé un mot  dans la barre de recherche, montrant les posts filtrés :**
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/cap%20proj1.PNG)
+**❗ Difficultés rencontrées :**
+- Lifting state up entre `PostSearch` et `App`
+- Gestion insensible à la casse dans `includes()`
+- Reset de la liste quand `searchTerm` est vide
 
+---
 
+## 🧰 Exercice 2 : Hooks Personnalisés
 
-**Difficultés rencontrées et comment vous les avez résolues :**
-* **Flux de données entre parent et enfant :** La principale difficulté était de faire passer le terme de recherche du composant `PostSearch` (enfant) au composant `App` (parent) pour que ce dernier puisse filtrer la liste. J'ai résolu cela en utilisant le "lifting state up" : une fonction `onSearch` est définie dans `App.jsx` et passée comme prop à `PostSearch`. `PostSearch` l'appelle quand la valeur de l'input change.
-* **Logique de filtrage insensible à la casse :** J'ai converti à la fois le `searchTerm` et le `title`/`body` des posts en minuscules (`.toLowerCase()`) avant d'utiliser `includes()` pour assurer que la recherche fonctionne indépendamment de la casse.
-* **Réinitialisation de la liste :** J'ai ajouté une condition pour que si `searchTerm` est vide, la liste revienne à afficher tous les posts initiaux, plutôt que de rester filtrée ou vide.
+### 🎯 Objectif : Créer des hooks réutilisables
 
+- [ ] 2.1 Créer le hook `useDebounce`
+- [ ] 2.2 Créer le hook `useLocalStorage`
+- [ ] 2.3 Les utiliser dans l’application
 
+### 2.4 Documenter votre solution ici
 
+✍️ _À compléter..._
 
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/dark.PNG)
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/light.PNG)
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/detail.PNG)
+---
+
+## 🌟 Exercice 3 : Optimisation et Context
+
+### 🎯 Objectif : Gérer le thème global et optimiser les rendus
+
+### 3.1 Créer le `ThemeContext` pour gérer le thème clair/sombre
+
+**🧐 Explication de la solution :**
+J’ai créé un `ThemeContext` dans `src/context/ThemeContext.js` avec `useState` pour stocker le thème (`light` ou `dark`) et fournir une fonction `toggleTheme`. Le contexte est utilisé dans toute l’app via `ThemeProvider`.
+
+### 3.2 Implémenter le composant `ThemeToggle`
+
+Un bouton `ThemeToggle` permet de basculer entre les thèmes. Il utilise `useContext(ThemeContext)` pour appeler `toggleTheme()`.
+
+### 3.3 Utiliser `useCallback` et `useMemo`
+
+J’ai encapsulé certaines fonctions dans `useCallback` pour éviter les re-créations inutiles, et utilisé `useMemo` pour optimiser les valeurs dérivées des données.
+
+### 3.4 Captures d’écran
+
+**📷 Thème clair :**  
+![Light mode](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/light.PNG)
+
+**📷 Thème sombre :**  
+![Dark mode](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/dark.PNG)
+
+**❗ Difficultés rencontrées :**
+- Application conditionnelle des classes globales
+- Gestion de la persistance du thème (à améliorer avec `useLocalStorage`)
+
+---
+
+## 🚀 Exercice 4 : Fonctionnalités avancées
+
+### 🎯 Objectif : Ajouter des fonctionnalités de chargement et détail
+
+### 4.2 Créer le composant `PostDetails` pour afficher les détails d'un post
+
+**🧐 Explication de la solution :**
+J’ai créé un composant `PostDetails` accessible via une route dynamique `/posts/:id`. Il utilise `useParams` pour récupérer l’ID du post et `useEffect` pour le charger depuis `https://dummyjson.com/posts/{id}`.
+
+### 4.4 Capture d’écran :
+
+**📷 Vue détaillée d’un post :**  
+![Post detail](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/detail.PNG)
+
+**❗ Difficultés rencontrées :**
+- Gestion de l’ID dynamique avec `useParams`
+- Affichage conditionnel pendant le chargement ou si l’ID est invalide
+
+---
+
+## 📁 Structure du projet
+
+```
+📁 ./
+├─ 📄 README.md
+├─ 📄 package.json
+├─ 📁 public/
+│  └─ 📄 index.html
+└─ 📁 src/
+   ├─ 📄 App.js
+   ├─ 📄 App.css
+   ├─ 📁 components/
+   │  ├─ 📄 PostList.js
+   │  ├─ 📄 PostSearch.js
+   │  ├─ 📄 PostDetails.js
+   │  ├─ 📄 ThemeToggle.js
+   │  └─ 📄 LoadingSpinner.js
+   ├─ 📁 hooks/
+   │  ├─ 📄 usePosts.js
+   │  ├─ 📄 useDebounce.js
+   │  ├─ 📄 useLocalStorage.js
+   │  └─ 📄 useIntersectionObserver.js
+   ├─ 📁 context/
+   │  └─ 📄 ThemeContext.js
+   ├─ 📄 index.css
+   └─ 📄 index.js
+```
+
+---
+
+## 🔗 Ressources utiles
+
+- https://dummyjson.com/docs/posts
+- https://fr.reactjs.org/docs/hooks-intro.html
+- https://fr.reactjs.org/docs/hooks-custom.html
