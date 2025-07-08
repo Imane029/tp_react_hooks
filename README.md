@@ -57,14 +57,10 @@ Dans `App.jsx`, j'ai ajouté un nouvel état `filteredPosts` qui sera la liste r
 
 **Captures d'écran montrant le fonctionnement :**
 
-**1. La page avec la barre de recherche vide et tous les posts affichés :**
 
-![Page avec barre de recherche vide](screenshots/cap proj.PNG)
+**. La page après avoir tapé un mot  dans la barre de recherche, montrant les posts filtrés :**
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/cap%20proj1.PNG)
 
-**2. La page après avoir tapé un mot (ex: "love") dans la barre de recherche, montrant les posts filtrés :**
-![Posts filtrés par recherche](screenshots/cap proj1.PNG)
-
-**3. (Optionnel) Un message "Aucun post trouvé" si la recherche ne donne aucun résultat :**
 
 
 **Difficultés rencontrées et comment vous les avez résolues :**
@@ -73,7 +69,7 @@ Dans `App.jsx`, j'ai ajouté un nouvel état `filteredPosts` qui sera la liste r
 * **Réinitialisation de la liste :** J'ai ajouté une condition pour que si `searchTerm` est vide, la liste revienne à afficher tous les posts initiaux, plutôt que de rester filtrée ou vide.
 
 
-![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/cap%20proj1.PNG)
+
 
 ![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/dark.PNG)
 ![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/light.PNG)
