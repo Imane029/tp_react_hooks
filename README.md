@@ -71,3 +71,10 @@ Dans `App.jsx`, j'ai ajouté un nouvel état `filteredPosts` qui sera la liste r
 * **Flux de données entre parent et enfant :** La principale difficulté était de faire passer le terme de recherche du composant `PostSearch` (enfant) au composant `App` (parent) pour que ce dernier puisse filtrer la liste. J'ai résolu cela en utilisant le "lifting state up" : une fonction `onSearch` est définie dans `App.jsx` et passée comme prop à `PostSearch`. `PostSearch` l'appelle quand la valeur de l'input change.
 * **Logique de filtrage insensible à la casse :** J'ai converti à la fois le `searchTerm` et le `title`/`body` des posts en minuscules (`.toLowerCase()`) avant d'utiliser `includes()` pour assurer que la recherche fonctionne indépendamment de la casse.
 * **Réinitialisation de la liste :** J'ai ajouté une condition pour que si `searchTerm` est vide, la liste revienne à afficher tous les posts initiaux, plutôt que de rester filtrée ou vide.
+
+
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/cap%20proj1.PNG)
+
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/dark.PNG)
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/light.PNG)
+![image_alt](https://github.com/Imane029/tp_react_hooks/blob/1faba5444be2f3803f2ceb83029b5c5e51cca166/screenshots/detail.PNG)
